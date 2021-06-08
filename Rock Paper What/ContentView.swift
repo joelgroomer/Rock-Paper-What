@@ -13,6 +13,8 @@ struct ContentView: View {
     @State private var score = 0
     @State private var appChoice = Int.random(in: 0...2)
     @State private var objectiveWin = Bool.random()
+    @State private var showingAlert = false
+    @State private var alertText = ""
     
     var body: some View {
         NavigationView {
@@ -41,6 +43,9 @@ struct ContentView: View {
                     .font(.title)
                 Text("\(score) out of \(turn)")
                 Spacer()
+                    .alert(isPresented: $showingAlert, content: {
+                        Alert(title: Text(""), message: Text(alertText), dismissButton: .default(Text("OK")))
+                    })
             }
             .font(.title)
             .navigationBarTitle(Text("Rock, Paper, ...What??"))
@@ -48,7 +53,34 @@ struct ContentView: View {
     }
     
     func userTapped(choice: Int) {
+        var won: Bool
+        var lost: Bool
         
+        switch appChoice - choice {
+        case 0:
+            won = false
+            lost = false
+        case 1, -2:
+            won = false
+            lost = true
+        case -1, 2:
+            won = true
+            lost = false
+        default:
+            fatalError("Impossible outcome")
+        }
+        
+        if won && objectiveWin || lost && !objectiveWin {
+            score += 1
+            alertText = "That's right!"
+        } else {
+            alertText = "No! You were trying to \(objectiveWin ? "win" : "lose")!"
+        }
+        
+        showingAlert = true
+        turn += 1
+        appChoice = Int.random(in: 0...2)
+        objectiveWin = Bool.random()
     }
 }
 
