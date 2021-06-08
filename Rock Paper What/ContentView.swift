@@ -24,14 +24,17 @@ struct ContentView: View {
                 Text("and you want to \(objectiveWin ? "win" : "lose"),")
                 Text("you'd choose...")
                 HStack {
-                ForEach(choices, id: \.self) { choice in
+                    ForEach(choices.indices) { i in
                         Button(action: {
-                            userTapped(choice: choice, appChoice: appChoice)
+                            userTapped(choice: i)
                         }) {
-                            Image(systemName: choice)
+                            Image(systemName: choices[i])
+                                .font(.largeTitle)
+                                .frame(width: 60, height: 60, alignment: .center)
+                                .padding()
+                                .border(Color.secondary)
+                                .padding()
                         }
-                        .font(.largeTitle)
-                        .padding()
                     }
                 }
                 Text("Your score:")
@@ -44,7 +47,7 @@ struct ContentView: View {
         }
     }
     
-    func userTapped(choice: String, appChoice: Int) {
+    func userTapped(choice: Int) {
         
     }
 }
